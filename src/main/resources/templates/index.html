@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nullbaleテスト</title>
+</head>
+<body>
+<h1>Nullableテスト</h1>
+<h2>Nullableリクエスト</h2>
+<button id="nullableButton">Nullable</button>
+
+<h2>Not Nullリクエスト</h2>
+<button id="notNullButton">Not Null</button>
+
+<script>
+const nullableButton = document.getElementById('nullableButton')
+const notNullButton = document.getElementById('notNullButton')
+
+nullableButton.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/getnullable')
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error(`error: status=${res.status}, text=${res.statusText}`)
+            }
+            return res.json()
+        })
+        .then((json) => {
+            console.log(json)
+            alert(json.data)
+        })
+        .catch((error) => {
+            alert(error)
+        })
+})
+
+notNullButton.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/getnotnull')
+        .then((res) => {
+            if (!res.ok) {
+                console.dir(res)
+                // https://blog.mudatobunka.org/entry/2016/04/26/092518
+                return res.json().then(err => {
+                    throw new Error(err.message)
+                })
+            }
+            return res.json()
+        })
+        .then((json) => {
+            console.log(json)
+            alert(json.data)
+        })
+        .catch((error) => {
+            alert(error)
+        })
+})
+</script>
+
+</body>
+</html>
