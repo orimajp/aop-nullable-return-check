@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RequestMapping("api")
 @RestController
 @RequiredArgsConstructor
@@ -20,13 +18,6 @@ public class DummyApiController {
     @GetMapping("getnullable")
     public ResponseEntity<Object> nullableReturn() {
         final DummyResult dummyResult = dummyApplicationService.getNullableDummyResult();
-        /*
-        if (dummyResult == null) {
-            final Map<String, String> errorMap = Map.of("message", "値がnullです。");
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-         */
         final DummyResponse dummyResponse = new DummyResponse(dummyResult.getData());
         return ResponseEntity.ok(dummyResponse);
     }
@@ -34,13 +25,6 @@ public class DummyApiController {
     @GetMapping("getnotnull")
     public ResponseEntity<Object> notNullReturn() {
         final DummyResult dummyResult = dummyApplicationService.getNotNullDummyResult();
-        /*
-        if (dummyResult == null) {
-            final Map<String, String> errorMap = Map.of("message", "値がnullです。");
-            return ResponseEntity.badRequest().body(errorMap);
-        }
-
-         */
         final DummyResponse dummyResponse = new DummyResponse(dummyResult.getData());
         return ResponseEntity.ok(dummyResponse);
     }

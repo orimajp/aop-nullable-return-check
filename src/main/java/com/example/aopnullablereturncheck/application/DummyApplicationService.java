@@ -5,7 +5,7 @@ public interface DummyApplicationService {
     /**
      * Null許容ダミー結果取得
      *
-     * @return DummyResult or null
+     * @return DummyResult
      */
     DummyResult getNullableDummyResult();
 

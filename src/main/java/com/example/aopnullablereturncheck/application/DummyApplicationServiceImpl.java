@@ -14,7 +14,7 @@ public class DummyApplicationServiceImpl implements DummyApplicationService {
     /**
      * Null許容ダミー結果取得
      *
-     * @return DummyResult or null
+     * @return DummyResult
      */
     @Override
     public DummyResult getNullableDummyResult() {
@@ -32,6 +32,7 @@ public class DummyApplicationServiceImpl implements DummyApplicationService {
      */
     @Override
     public DummyResult getNotNullDummyResult() {
+        // ここはnullが返らない想定
         final Dummy dummy = dummyRepository.getNotNullDummyData();
         if (dummy == null) {
             return new DummyResult("値がnullです。");

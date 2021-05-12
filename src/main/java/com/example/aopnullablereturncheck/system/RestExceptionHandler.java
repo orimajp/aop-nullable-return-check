@@ -10,7 +10,7 @@ import java.util.Map;
 @RestControllerAdvice(annotations = RestController.class)
 public class RestExceptionHandler {
 
-    @ExceptionHandler(NullableChecker.NullableCheckException.class)
+    @ExceptionHandler(NullableCheckException.class)
     public ResponseEntity<Object> handleNullableCheckException() {
         final Map<String, String> errorMap = Map.of("message", "Nullableチェックエラーです。");
         return ResponseEntity.badRequest().body(errorMap);

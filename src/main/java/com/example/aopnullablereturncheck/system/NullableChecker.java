@@ -3,6 +3,7 @@ package com.example.aopnullablereturncheck.system;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
@@ -13,18 +14,18 @@ import java.lang.reflect.Method;
 @Component
 public class NullableChecker {
 
-    /** Nullableチェック例外クラス */
-    public static class NullableCheckException extends RuntimeException {}
+    @Pointcut("@within(org.springframework.stereotype.Service)")
+    private void service() {}
 
-//    @Around("@within(org.springframework.stereotype.Component)")
-    @Around("@within(org.springframework.stereotype.Repository)")
-    // TODO 他のアノテーションも対象に加える
+    @Pointcut("@within(org.springframework.stereotype.Repository)")
+    private void repository() {}
+
+    @Pointcut("@within(org.springframework.stereotype.Component)")
+    private void component() {}
+
+    @Around("service() || repository() || component()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
-        final MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-        final Method method = methodSignature.getMethod();
-        final NullableReturn nullableReturn = method.getAnnotation(NullableReturn.class);
-
-        if (nullableReturn != null) {
+        if (existsNullableReturn(pjp)) {
             return pjp.proceed();
         }
 
@@ -35,6 +36,13 @@ public class NullableChecker {
         }
 
         return result;
+    }
+
+    private boolean existsNullableReturn(ProceedingJoinPoint pjp) {
+        final MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+        final Method method = methodSignature.getMethod();
+        final NullableReturn nullableReturn = method.getAnnotation(NullableReturn.class);
+        return nullableReturn != null;
     }
 
 }
