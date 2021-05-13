@@ -1,5 +1,6 @@
 package com.example.aopnullablereturncheck.system;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 
 // https://stackoverflow.com/questions/21275819/how-to-get-a-methods-annotation-value-from-a-proceedingjoinpoint
+@Slf4j
 @Aspect
 @Component
 public class NullableChecker {
@@ -32,7 +34,7 @@ public class NullableChecker {
         final Object result = pjp.proceed();
 
         if (result == null) {
-            throw new NullableCheckException();
+            throw new NullableCheckException(getTarget(pjp));
         }
 
         return result;
@@ -43,6 +45,12 @@ public class NullableChecker {
         final Method method = methodSignature.getMethod();
         final NullableReturn nullableReturn = method.getAnnotation(NullableReturn.class);
         return nullableReturn != null;
+    }
+
+    private String getTarget(ProceedingJoinPoint pjp) {
+        final String method = pjp.getSignature().getName();
+        final String className = pjp.getTarget().getClass().getName();
+        return String.format("%s#%s()", className, method);
     }
 
 }
